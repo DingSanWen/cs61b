@@ -8,6 +8,7 @@ public class ArrayDeque<Item> {
     private Item[] items;
     /*the deque is circular , the first item is at nextFirst + 1,
     *the last item is at nextLast - 1 .
+    * item.length-1 is the max index of array.
     * */
     public ArrayDeque(){
         size=0;
@@ -16,10 +17,23 @@ public class ArrayDeque<Item> {
         items=(Item[]) new Object[8];
     }
 
-    private void resize(int i){
-        Item[] a=(Item[]) new Object[i];
-        System.arraycopy(items,0,a,0,size);
-        items=a;
+    private void resize(int newLength){
+        Item[] a=(Item[]) new Object[newLength];
+        if(getIndex(0)<getIndex(size)){
+            //从两端开始复制的临界情况是nextLast-nextFirst=1.再大就能一次复制完
+            System.arraycopy(items,plusOne(nextFirst),a,0,size);
+            items=a;
+            nextFirst=newLength-1;
+            nextLast=size;
+        }
+        else{
+            System.arraycopy(items,nextFirst+1,a,0,items.length-1-nextFirst);
+            System.arraycopy(items,0,a,items.length-1-nextFirst,nextLast);
+            items=a;
+            nextFirst=newLength-1;
+            nextLast=size;
+        }
+
     }
 
     /**
@@ -40,6 +54,7 @@ public class ArrayDeque<Item> {
         else{
             index=items.length-1;
         }
+        return index;
     }
     /**increase the index forward , remember it's a loop*/
     private int plusOne(int index){
@@ -49,25 +64,27 @@ public class ArrayDeque<Item> {
         else{
             index=0;
         }
+        return index;
     }
     /**addFirst from the front of the array.
      * */
     public void addFirst(Item i){
         if(size==items.length){
-            resize(size+10);
+            resize(size*2);
         }
         items[nextFirst]=i;
-        minusOne(nextFirst);
+        nextFirst=minusOne(nextFirst);
+        //minusOne didn't change member variance , so use it's return value
         size+=1;
     }
     /**addFirst from the back of the array.
      * */
     public void addLast(Item i){
         if(size==items.length){
-            resize(size+10);
+            resize(size*2);
         }
         items[nextLast]=i;
-        plusOne(nextLast);
+        nextLast=plusOne(nextLast);
         size+=1;
     }
 
@@ -83,24 +100,34 @@ public class ArrayDeque<Item> {
     }
 
     public void printDeque(){
-        Item[] a=(Item[]) new Object[size];
-        System.arraycopy(items,0,a,0,nextLast);
-        System.arraycopy(items,0,a,0,nextLast);
+        //int index=nextFirst+1;
+
+        for(int i=0;i<size;i++){
+
+            System.out.print(get(i)+" ");
+            //
+        }
     }
 
     public Item removeFirst(){
+        if(items.length>16&&items.length>=4*size){
+            resize(items.length/2);
+        }
         Item i = items[nextFirst+1];
         items[nextFirst+1]=null;
         size-=1;
-        plusOne(nextFirst);
+        nextFirst=plusOne(nextFirst);
         return i;
     }
 
     public Item removeLast(){
+        if(items.length>16&&items.length>=4*size){
+            resize(items.length/2);
+        }
         Item i = items[nextLast-1];
         items[nextLast-1]=null;
         size-=1;
-        minusOne(nextLast);
+        nextLast=minusOne(nextLast);
         return i;
     }
 
@@ -109,4 +136,4 @@ public class ArrayDeque<Item> {
         return items[index];
     }
 }
-/* todo : resize and print */
+/* todo : resize method needs more tests */
