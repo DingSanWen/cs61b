@@ -10,11 +10,11 @@ public class IntList {
     /**
      * First element of list.
      */
-    public int first;
+    private int first;
     /**
      * Remaining elements of list.
      */
-    public IntList rest;
+    private IntList rest;
 
     /**
      * A List with first FIRST0 and rest REST0.
@@ -82,11 +82,11 @@ public class IntList {
      */
 
     public static IntList dcatenate(IntList A, IntList B) {
-        IntList p=A;
-        while(p.rest!=null){
-            p=p.rest;
+        IntList p = A;
+        while (p.rest != null) {
+            p = p.rest;
         }
-        p.rest=B;
+        p.rest = B;
         return A;
 
       /*if(A == null){
@@ -102,18 +102,18 @@ public class IntList {
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
     public static IntList catenate(IntList A, IntList B) {
-        IntList res = new IntList(A.first,null);
+        IntList res = new IntList(A.first, null);
         IntList ptr = res;
-        while(A.rest!=null){
-            A=A.rest;
-            ptr.rest=new IntList(A.first,null);
-            ptr=ptr.rest;
+        while (A.rest != null) {
+            A = A.rest;
+            ptr.rest = new IntList(A.first, null);
+            ptr = ptr.rest;
         }
         //ptr.rest=B;
-        while(B!=null){
-            ptr.rest=new IntList(B.first,null);
-            B=B.rest;
-            ptr=ptr.rest;
+        while (B != null) {
+            ptr.rest = new IntList(B.first, null);
+            B = B.rest;
+            ptr = ptr.rest;
         }
         return res;
     }
@@ -131,7 +131,7 @@ public class IntList {
     // newly reversed list (frontOfReversed), and one to the next
     // node in the un-reversed part of the old list (nextNodeToAdd).
 
-    public static IntList reverse(IntList A){
+    public static IntList reverse(IntList A) {
         /**
          *if(A.rest==null){
          *   return A;
@@ -139,16 +139,16 @@ public class IntList {
          *Looks like this part isn't necessary.
          */
         IntList frontOfReversed = null;
-        IntList nextNodeToAdd = A ;
-        while(nextNodeToAdd!=null){
+        IntList nextNodeToAdd = A;
+        while (nextNodeToAdd != null) {
             IntList remainderOfOriginal = nextNodeToAdd.rest;
             // Put nextNodeToAdd on the front of the reversed list.
-            nextNodeToAdd.rest= frontOfReversed;
+            nextNodeToAdd.rest = frontOfReversed;
             // Update the pointers.
-            frontOfReversed=nextNodeToAdd;
-            nextNodeToAdd=remainderOfOriginal;
+            frontOfReversed = nextNodeToAdd;
+            nextNodeToAdd = remainderOfOriginal;
         }
-        A=frontOfReversed;
+        A = frontOfReversed;
         return A;
     }
 
@@ -224,26 +224,29 @@ public class IntList {
         IntList tortoise = A;
         IntList hare = A;
 
-        if (A == null)
+        if (A == null) {
             return 0;
-
+        }
         int cnt = 0;
 
 
         while (true) {
             cnt++;
-            if (hare.rest != null)
+            if (hare.rest != null) {
                 hare = hare.rest.rest;
-            else
+            } else {
                 return 0;
+            }
 
             tortoise = tortoise.rest;
 
-            if (tortoise == null || hare == null)
+            if (tortoise == null || hare == null) {
                 return 0;
+            }
 
-            if (hare == tortoise)
+            if (hare == tortoise) {
                 return cnt;
+            }
         }
     }
 
